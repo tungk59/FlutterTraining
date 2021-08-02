@@ -20,6 +20,33 @@ class randomTextState extends State<randomText> {
   Widget build(BuildContext context) {
     // return new Text(wordPair.asCamelCase, style: new TextStyle(fontSize: 20.0));
     return new Scaffold(
+      appBar: new AppBar(
+        title: new Text("List Word"),
+        actions: <Widget>[
+          new IconButton(
+              icon: new Icon(Icons.list),
+              onPressed: () {
+                final pageRoute = new MaterialPageRoute(builder: (context) {
+                  final listTile = _checkedWords.map((wordPairs) {
+                    return ListTile(
+                      title: new Text(
+                        wordPairs.asCamelCase,
+                        style: new TextStyle(
+                            fontSize: 20.0, color: Colors.blueGrey),
+                      ),
+                    );
+                  });
+                  return new Scaffold(
+                    appBar: new AppBar(
+                      title: new Text("List checked word"),
+                    ),
+                    body: new ListView(children: listTile.toList()),
+                  );
+                });
+                Navigator.of(context).push(pageRoute);
+              })
+        ],
+      ),
       body: new ListView.builder(itemBuilder: (context, index) {
         if (index >= wordPair.length) {
           wordPair.addAll(generateWordPairs().take(10));
@@ -58,9 +85,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: "This is first app",
       home: new Scaffold(
-        appBar: AppBar(
-          title: new Text("My App Bar"),
-        ),
         body: new Center(
           child: new randomText(),
         ),
