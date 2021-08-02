@@ -14,10 +14,41 @@ class randomText extends StatefulWidget {
 }
 
 class randomTextState extends State<randomText> {
+  final wordPair = <WordPair>[];
+  var _checkedWords = new Set<WordPair>();
   @override
   Widget build(BuildContext context) {
-    final wordPair = new WordPair.random();
-    return new Text(wordPair.asCamelCase, style: new TextStyle(fontSize: 20.0));
+    // return new Text(wordPair.asCamelCase, style: new TextStyle(fontSize: 20.0));
+    return new Scaffold(
+      body: new ListView.builder(itemBuilder: (context, index) {
+        if (index >= wordPair.length) {
+          wordPair.addAll(generateWordPairs().take(10));
+        }
+        return _buildRow(wordPair[index]);
+      }),
+    );
+  }
+
+  Widget _buildRow(WordPair wordPair) {
+    final checked = _checkedWords.contains(wordPair);
+    final color = checked ? Colors.green : Colors.red;
+    return new ListTile(
+        leading: new Icon(
+          checked ? Icons.check_box : Icons.check_box_outline_blank,
+          color: color,
+        ),
+        title: new Text(wordPair.asUpperCase,
+            style: new TextStyle(fontSize: 20.0, color: color)),
+        tileColor: Colors.white,
+        onTap: () {
+          setState(() {
+            if (checked) {
+              _checkedWords.remove(wordPair);
+            } else {
+              _checkedWords.add(wordPair);
+            }
+          });
+        });
   }
 }
 
@@ -28,9 +59,9 @@ class MyApp extends StatelessWidget {
       title: "This is first app",
       home: new Scaffold(
         appBar: AppBar(
-          title: Text("My App Bar"),
+          title: new Text("My App Bar"),
         ),
-        body: Center(
+        body: new Center(
           child: new randomText(),
         ),
       ),
